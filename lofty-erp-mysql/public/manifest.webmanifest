@@ -1,0 +1,17 @@
+{
+  "name": "Lofty ERP",
+  "short_name": "Lofty",
+  "description": "Simple, connected business operations and inventory for small manufacturers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ea580c",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    function isUser(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    // Check if user is a member of the given business (or demo sample business)
+    function isBusinessMember(businessId) {
+      return isAuthenticated() && (
+        businessId == 'biz_apex_woods' ||
+        exists(/databases/$(database)/documents/businesses/$(businessId)/members/$(request.auth.uid))
+      );
+    }
+
+    // User Profile Rules
+    match /users/{uid} {
+      allow read, write: if isUser(uid) || isAuthenticated();
+    }
+
+    // Public QR Delivery Portal Tokens (drivers need to read token without sign-in)
+    match /deliveryTokens/{token} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Businesses and Sub-collections
+    match /businesses/{businessId} {
+      // Business root
+      allow read: if isBusinessMember(businessId) || isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isBusinessMember(businessId);
+
+      // Members sub-collection
+      match /members/{memberUid} {
+        allow read: if isBusinessMember(businessId) || isUser(memberUid);
+        allow create, update, delete: if isAuthenticated();
+      }
+
+      // Invitations
+      match /invitations/{invitationId} {
+        allow read: if true;
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      // Vendors
+      match /vendors/{vendorId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Products
+      match /products/{productId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Vendor Products
+      match /vendorProducts/{associationId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Warehouses
+      match /warehouses/{warehouseId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Purchase Orders
+      match /purchaseOrders/{purchaseOrderId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Deliveries (Created by driver or warehouse; verified by warehouse/manager)
+      match /deliveries/{deliveryId} {
+        allow read, write: if true;
+      }
+
+      // Supplier Bills
+      match /supplierBills/{billId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Stock Movements
+      match /stockMovements/{movementId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Stock Balances
+      match /stockBalances/{balanceId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Payments
+      match /payments/{paymentId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Notifications
+      match /notifications/{notificationId} {
+        allow read, write: if true;
+      }
+
+      // Audit Logs
+      match /auditLogs/{auditLogId} {
+        allow read, write: if true;
+      }
+    }
+  }
+}

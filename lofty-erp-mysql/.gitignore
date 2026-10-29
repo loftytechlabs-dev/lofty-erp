@@ -1,0 +1,48 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+*/node_modules
+
+# Production Builds
+dist
+*/dist
+dist-ssr
+
+# Environment Variables & Secrets (WITHOUT ANY APIS)
+.env
+.env.*
+!.env.example
+*.local
+
+# Firebase
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archives & Temporary binaries
+*.zip
+*.tar.gz
+*.pdf
+"Team_Submission 2"
+Team_Submission/
